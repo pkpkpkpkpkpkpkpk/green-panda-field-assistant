@@ -1,0 +1,13 @@
+@import '~normalize.css/normalize';
+
+@font-face {
+  font-family: 'Comforter';
+  src: url('~/src/assets/fonts/Comforter-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+.test {
+  font-family: 'Comforter';
+  color: red;
+}
