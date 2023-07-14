@@ -10,7 +10,7 @@ module.exports = {
     hot: true,
   },
   plugins: [
-    new HtmlWebpackPlugin({ title: 'Project' }),
+    new HtmlWebpackPlugin({ title: 'Speech to Table' }),
   ],
   module: {
     rules: [

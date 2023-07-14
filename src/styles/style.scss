@@ -1,13 +1,107 @@
 @import '~normalize.css/normalize';
 
-@font-face {
-  font-family: 'Comforter';
-  src: url('~/src/assets/fonts/Comforter-Regular.ttf') format('truetype');
-  font-weight: 400;
-  font-style: normal;
+// @font-face {
+//   font-family: 'Comforter';
+//   src: url('~/src/assets/fonts/Comforter-Regular.ttf') format('truetype');
+//   font-weight: 400;
+//   font-style: normal;
+// }
+
+body {
+  // font-family: 'Comforter';
+  font-family: sans-serif;
+  background: #eee;
 }
 
-.test {
-  font-family: 'Comforter';
-  color: red;
+.main {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.recorder {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn {
+  flex: 1;
+  height: 100%;
+  font-size: 128px;
+  background: fff;
+  border-color: #fff;
+  transition: 0.2s ease all;
+  cursor: pointer;
+
+  &:hover {
+    background: #ddd;
+  }
+
+  &.is-start {
+    color: red;
+  }
+  
+  &.is-recording {
+    background: red;
+    color: #fff;
+  }
+
+  &.is-disabled, &[disabled] {
+    pointer-events: none;
+  }
+}
+
+.output {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  overflow: auto;
+}
+
+.table {
+  table-layout: fixed;
+  border-collapse: collapse;
+  width: 100%;
+  text-align: center;
+  cursor: text;
+
+  tr {
+    &:not(:last-of-type) {
+      border-bottom: 1px solid #fff;
+    }
+
+    &:nth-child(odd) {
+      background-color: #eee;
+    }
+    
+    &:nth-child(even) {
+      background-color: #ddd;
+    }
+  }
+  
+  th, td {
+    padding: 12px;
+
+    &:not(:last-of-type) {
+      border-right: 1px solid #fff;
+    }
+  }
+}
+
+.copy {
+  position: absolute;
+  width: 100%;
+  height: 50%;
+  background: #000;
+  opacity: 0;
+  transition: 0.2s ease all;
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.1;
+  }
 }
