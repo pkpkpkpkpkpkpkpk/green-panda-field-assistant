@@ -1,25 +1,25 @@
-export const formatStringToTable = string => {
+export const formatStringToTable = (string:string) => {
   const outputTable = document.querySelector('[data-output-table]');
 
   //for testing
-  string = 'a next b next c line d next e next f';
+  // string = 'a next b next c line d next e next f';
 
   string = string.toLowerCase();
   string = string.replaceAll('.', '');
   string = string.replaceAll(',', '');
   // console.log(string)
 
-  const textArray = string.split('next');
+  const textArray:string[]|string = string.split('next');
   // console.log(textArray);
 
-  let textMap = textArray.map(val => {
+  let textMap = textArray.map((val:string[]|string) => {
     if(val.includes('line')) val = val.split('line');
     return val;
   });
   // console.log(textMap);
 
   let line = 0;
-  let textMatrix = [];
+  let textMatrix:string[][] = [];
   textMap.forEach(val => {
     if(!textMatrix[line]) textMatrix[line] = [];
   
@@ -43,6 +43,7 @@ export const formatStringToTable = string => {
 
     row.forEach(cell => {
       const cellEl = document.createElement('td');
+      cellEl.setAttribute('contenteditable', '');
       cellEl.innerHTML = cell;
       rowEl.appendChild(cellEl);
     });
