@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => {
+export const copyTableToClipboard = () => {
   const outputCopy = document.querySelector('[data-output-copy]');
   const outputTable = document.querySelector('[data-output-table]');
   
@@ -10,4 +10,4 @@ document.addEventListener('DOMContentLoaded', () => {
     select.addRange(range);
     document.execCommand('copy');
   });
-});
+};

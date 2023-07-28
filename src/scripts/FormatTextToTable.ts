@@ -1,15 +1,17 @@
-export const formatStringToTable = (string:string) => {
-  const outputTable = document.querySelector('[data-output-table]');
+export const formatTextToTable = (text:string) => {
+  const outputTable:HTMLTableElement = document.querySelector('[data-output-table]');
+  
+  while (outputTable.firstChild) outputTable.removeChild(outputTable.firstChild);
 
   //for testing
-  // string = 'a next b next c line d next e next f';
+  // text = 'a next b next c line d next e next f';
 
-  string = string.toLowerCase();
-  string = string.replaceAll('.', '');
-  string = string.replaceAll(',', '');
-  // console.log(string)
+  text = text.toLowerCase();
+  text = text.replaceAll('.', '');
+  text = text.replaceAll(',', '');
+  // console.log(text)
 
-  const textArray:string[]|string = string.split('next');
+  const textArray:string[]|string = text.split('next');
   // console.log(textArray);
 
   let textMap = textArray.map((val:string[]|string) => {

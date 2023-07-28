@@ -1,8 +1,8 @@
 import './styles/style.scss';
-import './RecordAudio';
-// import './CopyTableToClipboard';
+import { recordingControls } from './scripts/RecordingControls';
+// import { copyTableToClipboard } from './scripts/CopyTableToClipboard';
 
-function component() {
+const main = () => {
   const element = document.createElement('div');
   element.classList.add('main');
 
@@ -24,6 +24,12 @@ function component() {
   `;
 
   return element;
-}
+};
 
-document.body.appendChild(component());
+const onDOMContentLoaded = () => {
+  recordingControls();
+  // copyTableToClipboard();
+};
+
+document.body.appendChild(main());
+document.addEventListener('DOMContentLoaded', () => onDOMContentLoaded());
