@@ -78,6 +78,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: flex-start;
+  position: relative;
   background: #eee;
   overflow: auto;
   transition: 0.2s ease all;
@@ -124,6 +125,21 @@ body {
         margin-right: 6px;
       }
     }
+  }
+}
+
+.loader {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 100%;
+  background: green;
+  transition: 0.4s linear all;
+
+  &.is-hidden {
+    opacity: 0;
+    visibility: hidden;
   }
 }
 

@@ -1,4 +1,4 @@
-import { pipeline } from '@xenova/transformers';
+import { env, pipeline } from '@xenova/transformers';
 import { WaveFile } from 'wavefile';
 import { Buffer } from 'buffer';
 import { formatTextToTable } from './FormatTextToTable';
@@ -8,20 +8,41 @@ export const transcribe = async(wavBlob:Blob) => {
   const buffer = Buffer.from(arrayBuffer);
   const wav = new WaveFile(buffer);
   wav.toBitDepth('32f'); // Pipeline expects input as a Float32Array
-  wav.toSampleRate(16000); // Whisper expects audio with a sampling rate of 16000
+  const sampleRate = 16000; // Whisper expects audio with a sampling rate of 16000
+  wav.toSampleRate(sampleRate); 
   const audioData = wav.getSamples();
+  // const audioLengthInSeconds = audioData.length / sampleRate;
+
+  
+  const loaderEl:HTMLDivElement = document.querySelector('[data-loader]');
+  loaderEl.classList.remove('is-hidden');
+  const progressCallback = (data:{ status: string; progress: number; }) => {
+    if(data.status !== 'progress') return;
+    loaderEl.style.width = `${data.progress}%`
+  };  
+
+
+  env.allowRemoteModels = false;
+  env.localModelPath = 'models/';
+  env.backends.onnx.wasm.wasmPaths = 'wasm/';
 
   const task = 'automatic-speech-recognition';
   const model = 'Xenova/whisper-tiny.en';
 
-  console.log('downloading model...');
-  formatTextToTable('downloading model');
-  const transcriber = await pipeline(task, model);
+  console.log('initialising model...');
+  // formatTextToTable('initialising model');
+  const transcriber = await pipeline(task, model, {
+    // quantized: true,
+    progress_callback: (data:{ status: string; progress: number; }) => progressCallback(data),
+  });
 
   console.log('transcribing...');
-  formatTextToTable('transcribing');
-  const result = await transcriber(audioData);
+  // formatTextToTable('transcribing');
+  const result = await transcriber(audioData, {
+    language: 'english',
+  });
 
-  formatTextToTable(result.text);
   console.log(result.text);
+  formatTextToTable(result.text);
+  loaderEl.classList.add('is-hidden');
 };

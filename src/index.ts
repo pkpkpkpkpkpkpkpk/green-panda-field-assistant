@@ -5,7 +5,6 @@ import { recordingControls } from './scripts/RecordingControls';
 const main = () => {
   const element = document.createElement('div');
   element.classList.add('main');
-
   element.innerHTML = `
     <div class="recorder">
       <button data-start-recording class="btn is-start"><div class="icon is-record"></div></button>
@@ -20,9 +19,10 @@ const main = () => {
         <tr><td>Saying "NEXT" moves 1 column to the right</td></tr>
         <tr><td>Saying "LINE" moves 1 row down</td></tr>
       </table>
+
+      <div data-loader class="loader"></div>
     </div>
   `;
-
   return element;
 };
 
