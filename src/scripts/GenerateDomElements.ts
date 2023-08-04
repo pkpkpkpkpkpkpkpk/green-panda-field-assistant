@@ -11,8 +11,8 @@ export default () => {
     <div class="output">
       <table data-output-table class="table is-docs">
         <tr><td>Speak to generate a table</td></tr>
-        <tr><td><div class="icon is-record"></div> starts recording</td></tr>
-        <tr><td><div class="icon is-stop"></div> stops recording</td></tr>
+        <tr><td><span class="icon is-record"></span> starts recording</td></tr>
+        <tr><td><span class="icon is-stop"></span> stops recording</td></tr>
         <tr><td>Saying "NEXT" moves 1 column to the right</td></tr>
         <tr><td>Saying "LINE" moves 1 row down</td></tr>
       </table>
