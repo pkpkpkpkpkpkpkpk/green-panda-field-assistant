@@ -8,7 +8,7 @@ let recLength = 0;
 let recBuffers:Float32Array[][] = [];
 let sampleRate:number;
 
-export const initRecorder = async() => {
+export const init = async() => {
   if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
     console.error('getUserMedia not supported on your browser!');
   }
@@ -42,11 +42,11 @@ export const initRecorder = async() => {
   initBuffers();
 }
 
-export const startRecorder = () => {
+export const start = () => {
   isRecording = true;
 }
 
-export const stopRecorder = () => {
+export const stop = () => {
   isRecording = false;
 }
 

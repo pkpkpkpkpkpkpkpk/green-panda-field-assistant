@@ -1,9 +1,8 @@
 import { env, pipeline } from '@xenova/transformers';
 import { WaveFile } from 'wavefile';
 import { Buffer } from 'buffer';
-import { formatTextToTable } from './FormatTextToTable';
 
-export const transcribe = async(wavBlob:Blob) => {
+export default async(wavBlob:Blob) => {
   const arrayBuffer = await wavBlob.arrayBuffer();
   const buffer = Buffer.from(arrayBuffer);
   const wav = new WaveFile(buffer);
@@ -22,6 +21,7 @@ export const transcribe = async(wavBlob:Blob) => {
   };  
 
 
+  //@ts-ignore
   env.allowRemoteModels = false;
   env.localModelPath = 'models/';
   env.backends.onnx.wasm.wasmPaths = 'wasm/';
@@ -30,19 +30,17 @@ export const transcribe = async(wavBlob:Blob) => {
   const model = 'Xenova/whisper-tiny.en';
 
   console.log('initialising model...');
-  // formatTextToTable('initialising model');
   const transcriber = await pipeline(task, model, {
     // quantized: true,
     progress_callback: (data:{ status: string; progress: number; }) => progressCallback(data),
   });
 
   console.log('transcribing...');
-  // formatTextToTable('transcribing');
   const result = await transcriber(audioData, {
     language: 'english',
   });
 
   console.log(result.text);
-  formatTextToTable(result.text);
   loaderEl.classList.add('is-hidden');
-};
+  return result.text;
+}

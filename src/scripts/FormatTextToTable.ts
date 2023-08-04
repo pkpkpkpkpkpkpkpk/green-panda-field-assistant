@@ -1,7 +1,8 @@
-export const formatTextToTable = (text:string) => {
+export default (text:string) => {
   const outputTable:HTMLTableElement = document.querySelector('[data-output-table]');
   
   while (outputTable.firstChild) outputTable.removeChild(outputTable.firstChild);
+  outputTable.classList.remove('is-docs');
 
   //for testing
   // text = 'a next b next c line d next e next f';
@@ -52,4 +53,4 @@ export const formatTextToTable = (text:string) => {
 
     outputTable.appendChild(rowEl);
   });
-};
+}

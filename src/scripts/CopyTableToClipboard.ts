@@ -1,4 +1,4 @@
-export const copyTableToClipboard = () => {
+export default () => {
   const outputCopy = document.querySelector('[data-output-copy]');
   const outputTable = document.querySelector('[data-output-table]');
   
@@ -10,4 +10,4 @@ export const copyTableToClipboard = () => {
     select.addRange(range);
     document.execCommand('copy');
   });
-};
+}
