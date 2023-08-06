@@ -2,7 +2,7 @@ import { env, pipeline } from '@xenova/transformers';
 import { WaveFile } from 'wavefile';
 import { Buffer } from 'buffer';
 
-export default async(wavBlob:Blob) => {
+export default async(wavBlob:Blob):Promise<string> => {
   const arrayBuffer = await wavBlob.arrayBuffer();
   const buffer = Buffer.from(arrayBuffer);
   const wav = new WaveFile(buffer);
@@ -11,15 +11,6 @@ export default async(wavBlob:Blob) => {
   wav.toSampleRate(sampleRate); 
   const audioData = wav.getSamples();
   // const audioLengthInSeconds = audioData.length / sampleRate;
-
-  
-  const loaderEl:HTMLDivElement = document.querySelector('[data-loader]');
-  loaderEl.classList.remove('is-hidden');
-  const progressCallback = (data:{ status: string; progress: number; }) => {
-    if(data.status !== 'progress') return;
-    loaderEl.style.width = `${data.progress}%`
-  };  
-
 
   //@ts-ignore
   env.allowRemoteModels = false;
@@ -30,17 +21,11 @@ export default async(wavBlob:Blob) => {
   const model = 'Xenova/whisper-tiny.en';
 
   console.log('initialising model...');
-  const transcriber = await pipeline(task, model, {
-    // quantized: true,
-    progress_callback: (data:{ status: string; progress: number; }) => progressCallback(data),
-  });
+  const transcriber = await pipeline(task, model);
 
   console.log('transcribing...');
-  const result = await transcriber(audioData, {
-    language: 'english',
-  });
+  const result = await transcriber(audioData, { language: 'english' });
 
-  console.log(result.text);
-  loaderEl.classList.add('is-hidden');
+  console.log('result:', result.text);
   return result.text;
 }

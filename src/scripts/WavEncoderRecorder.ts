@@ -1,3 +1,5 @@
+import * as recordingMarker from './RecordingMarker.json';
+
 const config = {
   numChannels: 1,
   bufferLen: 4096,
@@ -26,11 +28,11 @@ export const init = async() => {
   node.onaudioprocess = e => {
     if (!isRecording) return;
 
-    let buffer = [];
+    let buffer:Float32Array[] = [];
     for (let channel = 0; channel < config.numChannels; channel++) {
       buffer.push(e.inputBuffer.getChannelData(channel));
-    }    
-
+    }  
+    
     const bufferBase64 = buffer.map(b => btoa(String.fromCharCode(...(new Uint8Array(b.buffer)))));
 
     record(bufferBase64);
@@ -50,7 +52,18 @@ export const stop = () => {
   isRecording = false;
 }
 
-export const exportWavBlob = () => {
+export const insertMarker = () => {
+  const markerLength = 49152;
+  const markerArray:string[] = Array.from(recordingMarker);
+  let buffers:Float32Array[][] = [];
+  for (let channel = 0; channel < config.numChannels; channel++) {
+    buffers[channel] = markerArray.map(b => new Float32Array(new Uint8Array([...atob(b)].map(c => c.charCodeAt(0))).buffer));
+    recBuffers[channel].push(...buffers[channel]);
+  }
+  recLength += markerLength;
+}
+
+export const getWavBlob = () => {
   let buffers = [];
   for (let channel = 0; channel < config.numChannels; channel++) {
     buffers.push(mergeBuffers(recBuffers[channel], recLength));

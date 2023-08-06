@@ -14,6 +14,7 @@ module.exports = {
     new HtmlWebpackPlugin({ title: 'Speech to Table' }),
     new CopyWebpackPlugin({
       patterns: [
+        { from: 'src/assets/sounds', to: 'sounds' },
         { from: 'src/assets/models', to: 'models' },
         { from: 'src/assets/wasm', to: 'wasm' },
       ]

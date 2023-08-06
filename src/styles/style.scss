@@ -7,12 +7,25 @@
 //   font-style: normal;
 // }
 
-$background-color: #eee;
-$background-darker-color: #ddd;
-$border-color: #fff;
-$recording-color: red;
+$background-color: #fff;
+$background-darker-color: #eee;
+$border-color: #000;
+$recording-color: #e58b88;
 $stop-color: #000;
-$loading-color: green;
+$focus-color: #d9effc;
+$loading-color: $background-darker-color;
+$icon-size: 64px;
+$cell-padding: 12px;
+
+@keyframes pulsatingOpacity {
+  0%,100% { opacity: 1; }
+  50% { opacity: 0.2; }
+}
+
+@keyframes pulsatingBackground {
+  0%,100% { background-color: $background-color; }
+  50% { background-color: $focus-color; }
+}
 
 body {
   // font-family: 'Comforter';
@@ -24,23 +37,22 @@ body {
   height: 100vh;
   display: flex;
   flex-direction: column;
+  border: 1px solid $border-color;
+  box-sizing: border-box;
 }
 
 .recorder {
   flex: 1;
+  display: flex;
 }
 
 .btn {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 50%;
+  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
   background: $background-color;
-  border-color: $border-color;
+  border: none;
   transition: 0.2s ease all;
   cursor: pointer;
   
@@ -50,25 +62,62 @@ body {
 
   &:active {
     .icon {
-      width: 60px;
-      height: 60px;
+      width: calc($icon-size * 0.9375);
+      height: calc($icon-size * 0.9375);
     }
   }
 
-  .is-recording & {
+  [data-is-recording] & {
     background: $recording-color;
   }
 
+  [data-is-transcribing] & {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
   & > .icon {
-    width: 64px;
-    height: 64px;
-    transition: 0.2s ease all;
+    width: $icon-size;
+    height: $icon-size;
     background: $recording-color;
     border-radius: 50%;
+    transition: 0.2s ease all;
     
-    .is-recording & {
+    [data-is-recording] & {
+      width: 0; 
+      height: 0; 
+      border-top: calc($icon-size / 2) solid transparent;
+      border-bottom: calc($icon-size / 2) solid transparent;
+      border-left: calc($icon-size / 2) solid $stop-color;
+      border-radius: 0;
+      position: relative;
+      left: calc($icon-size / -4);
+
+      &:after {
+        content: "";
+        display: block;
+        position: absolute;
+        top: calc($icon-size / -2);
+        width: 0;
+        height: 0;
+        border-top: calc($icon-size / 2) solid transparent;
+        border-bottom: calc($icon-size / 2) solid transparent;
+        border-left: calc($icon-size / 2) solid $stop-color;
+      }
+    }
+
+    [data-is-recording][data-is-freestyle] &,
+    [data-is-recording].is-last-prompt & {
+      width: $icon-size;
+      height: $icon-size;
       background: $stop-color;
       border-radius: unset;
+      border: none;
+      left: 0;
+
+      &:after {
+        display: none;
+      }
     }
   }
 }
@@ -76,10 +125,10 @@ body {
 .output {
   flex: 1;
   display: flex;
-  justify-content: center;
-  align-items: flex-start;
+  flex-direction: column;
   position: relative;
   background: $background-color;
+  border-top: 1px solid $border-color;
   overflow: auto;
   transition: 0.2s ease all;
 }
@@ -92,21 +141,26 @@ body {
   cursor: text;
 
   tr {
-    &:not(:last-of-type) {
-      border-bottom: 1px solid $border-color;
-    }
+    border-bottom: 1px solid $border-color;
 
-    &:nth-child(odd) {
-      background-color: $background-color;
-    }
+    // &:nth-child(odd) {
+    //   background-color: $background-color;
+    // }
     
-    &:nth-child(even) {
-      background-color: $background-darker-color;
-    }
+    // &:nth-child(even) {
+    //   background-color: $background-darker-color;
+    // }
   }
   
   th, td {
-    padding: 12px;
+    padding: $cell-padding;
+
+    &:focus,
+    &.is-focused {
+      outline: none;
+      background: $focus-color;
+      animation: pulsatingBackground 2s infinite;
+    }
     
     &:not(:last-of-type) {
       border-right: 1px solid $border-color;
@@ -114,15 +168,17 @@ body {
   }
 
   &.is-docs {
-    th, td {
+    tr {
       display: flex;
-      align-items: center;
       justify-content: center;
-      
+      align-items: center;
+    }
+
+    th, td {
       .icon {
-        width: 12px;
-        height: 12px;
-        margin-right: 6px;
+        width: 16px;
+        height: 16px;
+        display: block;
 
         &.is-record {
           background: $recording-color;
@@ -138,30 +194,40 @@ body {
 }
 
 .loader {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 0;
-  height: 100%;
+  height: 42.4px;
+  width: 100%;
   background: $loading-color;
-  transition: 0.4s linear all;
-
+  animation: pulsatingOpacity 2s infinite;
+  
   &.is-hidden {
     opacity: 0;
     visibility: hidden;
   }
 }
 
-// .copy {
-//   position: absolute;
-//   width: 100%;
-//   height: 50%;
-//   background: #000;
-//   opacity: 0;
-//   transition: 0.2s ease all;
-//   cursor: pointer;
+.input {
+  width: 100%;
+  padding: $cell-padding;
+  text-align: center;
+  border: none;
+  border-bottom: 1px solid $border-color;
+  box-sizing: border-box;
 
-//   &:hover {
-//     opacity: 0.1;
-//   }
-// }
+  &.is-hidden {
+    display: none;
+  }
+
+  &:focus {
+    outline: none;
+    animation: pulsatingBackground 2s infinite;
+  }
+
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  &[type=number] {
+    -moz-appearance: textfield;
+  }
+}

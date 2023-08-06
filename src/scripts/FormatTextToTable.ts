@@ -1,8 +1,14 @@
-export default (text:string) => {
+import { ATTR_RECORDING } from './tools/Constants';
+
+export default (text:string, prompts?:string[]) => {
   const outputTable:HTMLTableElement = document.querySelector('[data-output-table]');
   
-  while (outputTable.firstChild) outputTable.removeChild(outputTable.firstChild);
-  outputTable.classList.remove('is-docs');
+  if(!prompts || !prompts.length) {
+    while (outputTable.firstChild) outputTable.removeChild(outputTable.firstChild);
+  }
+  
+  if(document.body.hasAttribute(ATTR_RECORDING)) return;
+
 
   //for testing
   // text = 'a next b next c line d next e next f';
@@ -12,7 +18,12 @@ export default (text:string) => {
   text = text.replaceAll(',', '');
   // console.log(text)
 
-  const textArray:string[]|string = text.split('next');
+  let textArray:string[]|string;
+  if(prompts && prompts.length) {
+    textArray = text.split('next column');
+  } else {
+    textArray = text.split('next');
+  }
   // console.log(textArray);
 
   let textMap = textArray.map((val:string[]|string) => {
@@ -40,6 +51,8 @@ export default (text:string) => {
     textMatrix[line].push(valStripped);
   });
   // console.log(textMatrix);
+  
+  if(textMatrix.length === 1 && textMatrix[0].length === 1 && textMatrix[0][0] === '') textMatrix[0][0] = '[blank_audio]';
 
   textMatrix.forEach(row => {
     const rowEl = document.createElement('tr');
