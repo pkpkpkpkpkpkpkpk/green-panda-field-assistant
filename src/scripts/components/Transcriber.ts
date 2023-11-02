@@ -13,10 +13,10 @@ export default async(wavBlob:Blob):Promise<string> => {
   // const audioLengthInSeconds = audioData.length / sampleRate;
 
   //use local models to transcribe (works offline)
-  // //@ts-ignore
-  // env.allowRemoteModels = false;
-  // env.localModelPath = 'models/';
-  // env.backends.onnx.wasm.wasmPaths = 'wasm/';
+  //@ts-ignore
+  env.allowRemoteModels = false;
+  env.localModelPath = 'models/';
+  env.backends.onnx.wasm.wasmPaths = 'wasm/';
 
   const task = 'automatic-speech-recognition';
   const model = 'Xenova/whisper-tiny.en';
