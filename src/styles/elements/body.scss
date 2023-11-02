@@ -1,0 +1,10 @@
+body {
+  font-family: sans-serif;
+  color: $text-color;
+  background: $background-color;
+  
+  &[data-dark-theme] {
+    color: $text-dark-color;
+    background: $background-dark-color;
+  }
+}

@@ -12,6 +12,7 @@ export default async(wavBlob:Blob):Promise<string> => {
   const audioData = wav.getSamples();
   // const audioLengthInSeconds = audioData.length / sampleRate;
 
+  //use local models to transcribe (works offline)
   //@ts-ignore
   env.allowRemoteModels = false;
   env.localModelPath = 'models/';

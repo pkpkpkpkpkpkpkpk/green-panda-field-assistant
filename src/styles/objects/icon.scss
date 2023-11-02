@@ -1,0 +1,125 @@
+.icon {
+  &.is-record {
+    width: $small-icon-size;
+    height: $small-icon-size;
+    background: $recording-color;
+    border-radius: 50%;
+  }
+
+  &.is-stop {
+    background: $stop-color;
+  }
+
+  &.is-menu {
+    width: $small-icon-size;
+    height: $small-icon-width;
+    background: $icon-color;
+
+    &:before {
+      content: '';
+      width: $small-icon-size;
+      height: $small-icon-width;
+      background: $icon-color;
+      display: block;
+      position: relative;
+      top: -($small-icon-width * 2);
+    }
+
+    &:after {
+      content: '';
+      width: $small-icon-size;
+      height: $small-icon-width;
+      background: $icon-color;
+      display: block;
+      position: relative;
+      top: $small-icon-width;
+    }
+  }
+
+  &.is-download {
+    width: $small-icon-width;
+    height: $small-icon-size;
+    background: $icon-color;
+    display: block;
+
+    &:before {
+      content: '';
+      border: solid $icon-color;
+      border-width: 0 $small-icon-width $small-icon-width 0;
+      padding: $small-icon-width;
+      transform: rotate(45deg);
+      display: block;
+      position: relative;
+      top: $small-icon-size / 2;
+      left: -$small-icon-width;
+      background: transparent;
+    }
+
+    &:after {
+      content: '';
+      width: $small-icon-size - $small-icon-width;
+      height: $small-icon-width;
+      background: $icon-color;
+      display: block;
+      position: relative;
+      top: $small-icon-size * .75;
+      left: -($small-icon-size - ($small-icon-width * 2)) / 2;
+    }
+  }
+
+  &.is-plus {
+    width: $small-icon-size;
+    height: $small-icon-width;
+    background: $icon-color;
+    
+    &:after {
+      content: '';
+      width: $small-icon-width;
+      height: $small-icon-size;
+      background: $icon-color;
+      display: block;
+      position: relative;
+      left: calc(($small-icon-size - $small-icon-width) / 2);
+      top: calc(($small-icon-size - $small-icon-width) / -2);
+    }
+  }
+
+  &.is-cross {
+    width: $small-icon-size;
+    height: $small-icon-width;
+    background: $icon-color;
+    transform: rotate(45deg);
+    
+    &:after {
+      content: '';
+      width: $small-icon-width;
+      height: $small-icon-size;
+      background: $icon-color;
+      display: block;
+      position: relative;
+      left: calc(($small-icon-size - $small-icon-width) / 2);
+      top: calc(($small-icon-size - $small-icon-width) / -2);
+    }
+  }
+
+  &.is-crescent-moon {
+    width: $small-icon-size;
+    height: $small-icon-size;
+    background: $background-color;
+    border-radius: 50%;
+    position: relative;
+    transition: $transition-default;
+
+    &:after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: $small-icon-size * .8;
+      height: $small-icon-size * .8;
+      background: $theme-color;
+      border-radius: 50%;
+      transition: $transition-default;
+    }
+  }
+}

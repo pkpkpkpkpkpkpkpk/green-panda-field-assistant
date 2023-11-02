@@ -1,5 +1,6 @@
 {
-  "name": "speech-to-table",
+  "name": "green-panda-field-assistant",
+  "description": "Speech to table field data collection assistant.",
   "version": "1.0.0",
   "main": "index.js",
   "author": "Parth Khatri <p.khatri21@gmail.com>",
@@ -27,7 +28,9 @@
     "webpack-dev-server": "^4.7.3"
   },
   "dependencies": {
+    "@types/js-cookie": "^3.0.5",
     "@xenova/transformers": "^2.4.3",
+    "js-cookie": "^3.0.5",
     "normalize.css": "^8.0.1",
     "wavefile": "^11.0.0"
   }

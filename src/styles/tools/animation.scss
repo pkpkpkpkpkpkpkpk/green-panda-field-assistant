@@ -1,0 +1,14 @@
+@keyframes pulsatingOpacity {
+  0%,100% { opacity: 1; }
+  50% { opacity: 0.2; }
+}
+
+@keyframes pulsatingBackground {
+  0%,100% { background-color: $background-color; }
+  50% { background-color: $focus-color; }
+}
+
+@keyframes pulsatingBackgroundDark {
+  0%,100% { background-color: $background-dark-color; }
+  50% { background-color: $focus-dark-color; }
+}

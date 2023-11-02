@@ -1,0 +1,27 @@
+@charset "UTF-8";
+
+//resets
+@import '~normalize.css/normalize';
+
+//settings
+@import './settings/color';
+@import './settings/transition';
+@import './settings/size';
+
+//tools
+@import './tools/animation';
+
+//elements
+@import './elements/body';
+
+//objects
+@import './objects/button';
+@import './objects/icon';
+@import './objects/loader';
+
+//components
+@import './components/main';
+@import './components/menu';
+@import './components/output';
+@import './components/table';
+@import './components/recorder';

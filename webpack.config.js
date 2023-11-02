@@ -11,7 +11,7 @@ module.exports = {
     hot: true,
   },
   plugins: [
-    new HtmlWebpackPlugin({ title: 'Speech to Table' }),
+    new HtmlWebpackPlugin({ title: 'Green Panda Field Assistant' }),
     new CopyWebpackPlugin({
       patterns: [
         { from: 'src/assets/sounds', to: 'sounds' },

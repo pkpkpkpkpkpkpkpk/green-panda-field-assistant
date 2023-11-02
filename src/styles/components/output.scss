@@ -1,0 +1,19 @@
+.output {
+  display: flex;
+  height: calc(200% / 3);
+
+  &-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    background: $background-color;
+    border-top: $border-width solid $border-color;
+    transition: $transition-default;
+    overflow: auto;
+
+    [data-dark-theme] & {
+      background: $background-dark-color;
+    }
+  }
+}

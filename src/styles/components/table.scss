@@ -1,0 +1,118 @@
+.table {
+  table-layout: fixed;
+  border-collapse: collapse;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  text-align: center;
+  cursor: text;
+
+  [data-mode="freestyle"][data-dark-theme] & {
+    border-top: $border-width solid $menu-color;
+  }
+  
+  thead,
+  tbody {
+    width: 100%;
+  }
+
+  tr {
+    display: flex;
+    width: 100%;
+  }
+  
+  th, td {
+    height: $cell-height;
+    line-height: $cell-height;
+    padding: 0 $cell-padding;
+    width: 100%;
+    min-width: 100px;
+    border-bottom: $border-width solid $border-color;
+
+    &:focus,
+    &.is-focused {
+      outline: none;
+      background: $focus-color;
+      animation: pulsatingBackground 2s infinite;
+    }
+    
+    &:not(:last-of-type) {
+      border-right: $border-width solid $border-color;
+    }
+
+    [data-dark-theme] & {
+      border-color: $border-dark-color;
+
+      &:focus,
+      &.is-focused {
+        animation-name: pulsatingBackgroundDark;
+      }
+    }
+  }
+
+  [data-mode="freestyle"] & {
+    thead { display: none; }
+  }
+
+  &.is-docs {
+    height: 100%;
+
+    tbody {
+      display: none;
+      height: 100%;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      top: $cell-height / 2;
+
+      :not([data-mode] &),
+      [data-mode="default"] & {
+        &[data-docs="default"] {
+          display: flex;
+        }
+      }
+
+      [data-mode="freestyle"] & {
+        &[data-docs="freestyle"] {
+          display: flex;
+        }
+      }
+
+      [data-mode="specific"] & {
+        &[data-docs="specific"] {
+          display: flex;
+        }
+      }
+
+      tr {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        &:last-of-type {
+          td {
+            border-bottom: none;
+          }
+        }
+      }
+  
+      th, td {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: auto;
+        min-width: unset;
+
+        [data-dark-theme] & {
+          .icon.is-plus {
+            background: $text-dark-color;
+
+            &:after {
+              background: $text-dark-color;
+            }
+          }
+        }
+      }
+    }
+  }
+}

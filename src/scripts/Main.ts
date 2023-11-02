@@ -1,40 +1,49 @@
-import generateDomElements from './GenerateDomElements';
-import * as recorder from './WavEncoderRecorder';
-import * as events from './Events';
+import generateDomElements from './elements/GenerateDomElements';
+import * as constants from './tools/Constants';
 import * as helpers from './tools/Helpers';
-import transcriber from './Transcriber';
-import formatTextToTable from './FormatTextToTable';
+import * as events from './components/Events';
+import * as recorder from './components/WavEncoderRecorder';
+import transcriber from './components/Transcriber';
+import formatTextToTable from './components/FormatTextToTable';
 
-let isFreestyle = false;
-if(location.search.includes('freestyle')) {
-  isFreestyle = true;
-  document.body.setAttribute('data-is-freestyle', '');
-}
 let headerCells:HTMLTableCellElement[] = [];
 let prompts:string[] = [];
 let promptsIndex = 0;
 let promptsRemaining:number;
+let time:number;
+let startTime:number;
 
 const onDOMContentLoaded = () => {
-  recorder.init();
-  events.init();
-  if(!isFreestyle) events.initForPredefined();
   helpers.init();
+  events.init();
+  recorder.init();
 }
 
 const onRecordingStarted = async() => {
-  if(isFreestyle) {
+  events.disableDownloadBtn();
+
+  if(helpers.isMode(constants.MODE_FREESTYLE)) {
     helpers.playSound('start', () => recorder.start());
-    formatTextToTable('');
-    return
+    return;
   }
   
   if(promptsIndex === 0) {
     headerCells = events.getHeaderCells();
     prompts = events.getPrompts();
+    time = new Date().getTime();
+    if(startTime === undefined) startTime = time;
   }
+
+  if(helpers.isMode(constants.MODE_SPECIFIC)) {
+    headerCells.forEach(header => header.classList.add('is-focused'));
+    document.body.classList.add('is-last-prompt');
+    helpers.playSound('start', () => recorder.start());
+    return;
+  }
+
   headerCells.forEach(header => header.classList.remove('is-focused'));
   headerCells[promptsIndex].classList.add('is-focused');
+  helpers.scrollTo('none', 'left', document.querySelector('[data-output-main]'), headerCells[promptsIndex]);
   const thisPrompt = prompts[promptsIndex];
   promptsIndex++;
   promptsRemaining = prompts.length - promptsIndex;
@@ -44,7 +53,7 @@ const onRecordingStarted = async() => {
 }
 
 const onRecordingStopped = async() => {
-  if(!isFreestyle && promptsRemaining > 0) {
+  if(!helpers.isMode(constants.MODE_FREESTYLE) && promptsRemaining > 0) {
     recorder.stop();
     recorder.insertMarker();
     events.toggleRecordingState();
@@ -56,16 +65,18 @@ const onRecordingStopped = async() => {
   helpers.setState('transcribing');
   helpers.playSound('end');
   helpers.toggleLoader();
+  helpers.scrollTo('bottom', 'left', document.querySelector('[data-output-main]'));
   const wavBlob = recorder.getWavBlob();
   const transcribedText = await transcriber(wavBlob);
-  formatTextToTable(transcribedText, prompts);
+  formatTextToTable(transcribedText, prompts, time, startTime);
   helpers.playSound('success');
   helpers.toggleLoader();
+  events.enableDownloadBtn();
   promptsIndex = 0;
   helpers.removeState('transcribing');
 }
 
-document.body.appendChild(generateDomElements(isFreestyle));
+document.body.appendChild(generateDomElements());
 document.addEventListener('DOMContentLoaded', () => onDOMContentLoaded());
-document.addEventListener('onRecordingStarted', () => onRecordingStarted());
-document.addEventListener('onRecordingStopped', () => onRecordingStopped());
+document.addEventListener(constants.EVENT_ON_RECORDING_STARTED, () => onRecordingStarted());
+document.addEventListener(constants.EVENT_ON_RECORDING_STOPPED, () => onRecordingStopped());

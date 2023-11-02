@@ -1,4 +1,4 @@
-import * as recordingMarker from './RecordingMarker.json';
+import * as recordingMarker from './../json/RecordingMarker.json';
 
 const config = {
   numChannels: 1,
