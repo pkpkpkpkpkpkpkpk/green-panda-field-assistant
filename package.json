@@ -13,6 +13,7 @@
     "@babel/core": "^7.16.12",
     "@babel/preset-env": "^7.16.11",
     "@babel/preset-typescript": "^7.16.7",
+    "@types/js-cookie": "^3.0.5",
     "@types/webpack": "^5.28.0",
     "@types/webpack-dev-server": "^4.7.2",
     "babel-loader": "^8.2.3",
@@ -28,7 +29,6 @@
     "webpack-dev-server": "^4.7.3"
   },
   "dependencies": {
-    "@types/js-cookie": "^3.0.5",
     "@xenova/transformers": "^2.4.3",
     "js-cookie": "^3.0.5",
     "normalize.css": "^8.0.1",
