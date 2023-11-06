@@ -19,6 +19,7 @@
     "babel-loader": "^8.2.3",
     "copy-webpack-plugin": "^11.0.0",
     "css-loader": "^6.5.1",
+    "gh-pages": "^6.0.0",
     "html-webpack-plugin": "^5.5.0",
     "sass": "^1.49.4",
     "sass-loader": "^12.4.0",
