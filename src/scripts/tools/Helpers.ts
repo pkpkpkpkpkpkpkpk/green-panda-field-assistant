@@ -1,28 +1,13 @@
 import * as constants from './../tools/Constants';
 
-let loaderEl:HTMLDivElement;
 let startSound:HTMLAudioElement;
 let endSound:HTMLAudioElement;
 let successSound:HTMLAudioElement;
 
-let isLoading = false;
-
 export const init = () => {
-  loaderEl = document.querySelector('[data-loader]');
-
   startSound = new Audio('sounds/start.wav');
   endSound = new Audio('sounds/end.wav');
   successSound = new Audio('sounds/success.wav');
-}
-
-export const toggleLoader = () => {
-  if(!isLoading) {
-    loaderEl.classList.remove(constants.CLASS_HIDDEN);
-    isLoading = true;
-  } else {
-    loaderEl.classList.add(constants.CLASS_HIDDEN);
-    isLoading = false;
-  }
 }
 
 export const playSound = (sound:'start'|'end'|'success', onEnd?:() => void) => {

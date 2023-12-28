@@ -1,20 +1,20 @@
 .loader {
   height: $cell-height;
-  min-height: $cell-height;
   width: 100%;
   background: $loading-color;
-  border-top: $border-width solid $border-color;
+  min-height: 0;
+  opacity: 0;
+  visibility: hidden;
   animation: pulsatingOpacity 2s infinite;
 
   [data-dark-theme] & {
     background: $loading-dark-color;
     border-color: $border-dark-color;
   }
-  
-  &.is-hidden {
-    min-height: 0;
-    opacity: 0;
-    visibility: hidden;
-    border: none;
+
+  [data-is-transcribing] & {
+    min-height: $cell-height;
+    opacity: 1;
+    visibility: visible;
   }
 }

@@ -1,6 +1,6 @@
 export const ATTR_RECORDING = 'data-is-recording';
 export const ATTR_TRANSCRIBING = 'data-is-transcribing';
-export const ATTR_MENU_OPEN = 'data-menu-open';
+export const ATTR_SETTINGS_OPEN = 'data-settings-open';
 export const ATTR_MODE = 'data-mode';
 export const ATTR_DARK_THEME = 'data-dark-theme';
 

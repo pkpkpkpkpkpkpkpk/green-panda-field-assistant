@@ -6,24 +6,22 @@ let toggleRecordingBtn:HTMLButtonElement;
 let outputMain:HTMLDivElement;
 let outputTable:HTMLTableElement;
 let addColumnBtn:HTMLButtonElement;
-let menuToggleBtns:NodeListOf<HTMLButtonElement>;
+let settingsToggleBtns:NodeListOf<HTMLButtonElement>;
 let modeChangerBtns:NodeListOf<HTMLButtonElement>;
 let darkThemeToggleBtn:HTMLButtonElement;
 let downloadBtn:HTMLButtonElement;
 
-let isRecording = false;
-
 export const init = () => {
   toggleRecordingBtn = document.querySelector('[data-toggle-recording]');
   addColumnBtn = document.querySelector('[data-add-column]');
-  menuToggleBtns = document.querySelectorAll('[data-menu-toggle]');
+  settingsToggleBtns = document.querySelectorAll('[data-settings-toggle]');
   modeChangerBtns = document.querySelectorAll('[data-mode-changer]');
   darkThemeToggleBtn = document.querySelector('[data-dark-theme-toggle]');
   downloadBtn = document.querySelector('[data-download]');
 
   toggleRecordingBtn?.addEventListener('click', e => toggleRecordingState(e));
   addColumnBtn?.addEventListener('click', e => addColumn(e));
-  menuToggleBtns?.forEach(btn => btn.addEventListener('click', e => menuToggle(e)));
+  settingsToggleBtns?.forEach(btn => btn.addEventListener('click', e => settingsToggle(e)));
   modeChangerBtns?.forEach(btn => btn.addEventListener('click', e => changeMode(e)));
   darkThemeToggleBtn?.addEventListener('click', e => darkThemeToggle(e));
   downloadBtn?.addEventListener('click', e => downloadCSV(e));
@@ -46,8 +44,6 @@ export const init = () => {
 export const toggleRecordingState = (e?:MouseEvent|KeyboardEvent) => {
   e?.preventDefault();
 
-  if(helpers.isState('transcribing')) return;
-
   //remove focus state and text selection
   try { (document.activeElement as HTMLElement).blur(); } 
   catch (error) { console.log('active element cannot be blurred') }
@@ -59,12 +55,12 @@ export const toggleRecordingState = (e?:MouseEvent|KeyboardEvent) => {
   
   helpers.scrollTo('top', 'left', document.querySelector('[data-output-main]'));
 
-  if(!isRecording) {
-    startRecording();
+  if(!helpers.isState('recording')) {
+    document.dispatchEvent(new Event(constants.EVENT_ON_RECORDING_STARTED));
     return;
   }
 
-  stopRecording();
+  document.dispatchEvent(new Event(constants.EVENT_ON_RECORDING_STOPPED));
 }
 
 export const getHeaderCells = () => {
@@ -92,36 +88,24 @@ export const disableDownloadBtn = () => {
   downloadBtn.classList.add('is-disabled');
 }
 
-const startRecording = () => {
-  isRecording = true;
-  helpers.setState('recording');
-  document.dispatchEvent(new Event(constants.EVENT_ON_RECORDING_STARTED));
-}
-
-const stopRecording = () => {
-  isRecording = false;
-  helpers.removeState('recording');
-  document.dispatchEvent(new Event(constants.EVENT_ON_RECORDING_STOPPED));
-}
-
 const addColumn = (e?:MouseEvent|KeyboardEvent) => {
   e.preventDefault();
   outputTable = document.querySelector('[data-output-table]');
-  
   const rows = outputTable.querySelectorAll('tr');
-  const newHeaderCell = document.createElement('th');
-  const newCell = document.createElement('td');
-  [newHeaderCell, newCell].forEach(cell => cell.setAttribute('contenteditable', ''));
   const columnCount = rows.length && rows[0].querySelectorAll('th, td').length;
-  newHeaderCell.setAttribute('data-index', `${helpers.getAlphabetDepthFromIndex(columnCount)}0`);
   
   rows.forEach((row, index) => {
     if(!helpers.isMode(constants.MODE_FREESTYLE) && index === 0) {
+      const newHeaderCell = document.createElement('th');
+      newHeaderCell.setAttribute('contenteditable', '');
+      newHeaderCell.setAttribute('data-index', `${helpers.getAlphabetDepthFromIndex(columnCount)}0`);
       row.appendChild(newHeaderCell);
       newHeaderCell.focus();
       return;
     }
     
+    const newCell = document.createElement('td');
+    newCell.setAttribute('contenteditable', '');
     const cellIndex = `${helpers.getAlphabetDepthFromIndex(columnCount)}${index}`;
     newCell.setAttribute('data-index', `${helpers.getAlphabetDepthFromIndex(columnCount)}${cellIndex}`);
     row.appendChild(newCell);
@@ -136,9 +120,9 @@ const removeDocs = () => {
   outputTable.classList.remove('is-docs');
 }
 
-const menuToggle = (e:MouseEvent) => {
+const settingsToggle = (e:MouseEvent) => {
   e.preventDefault();
-  document.body.toggleAttribute(constants.ATTR_MENU_OPEN);
+  document.body.toggleAttribute(constants.ATTR_SETTINGS_OPEN);
 
   focusOnFirstCell();
 }
@@ -151,7 +135,7 @@ const changeMode = (e:MouseEvent) => {
   Cookies.set(constants.COOKIE_MODE, newMode);
   modeChangerBtns.forEach(btn => btn.classList.remove(constants.CLASS_ACTIVE));
   self.classList.add(constants.CLASS_ACTIVE);
-  menuToggleBtns[0].click();
+  settingsToggleBtns[0].click();
 }
 
 const darkThemeToggle = (e:MouseEvent) => {

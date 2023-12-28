@@ -10,29 +10,39 @@
     background: $stop-color;
   }
 
-  &.is-menu {
+  &.is-gear {
     width: $small-icon-size;
-    height: $small-icon-width;
-    background: $icon-color;
-
-    &:before {
-      content: '';
-      width: $small-icon-size;
-      height: $small-icon-width;
-      background: $icon-color;
-      display: block;
-      position: relative;
-      top: -($small-icon-width * 2);
-    }
-
+    height: $small-icon-size;
+    position: relative;
+    background-image: linear-gradient(to right, $icon-color, $icon-color);
+    background-size: 25% 100%;
+    background-repeat: no-repeat;
+    background-position: center center;
+    transform-origin: center;
+    
+    &:before,
     &:after {
       content: '';
-      width: $small-icon-size;
-      height: $small-icon-width;
-      background: $icon-color;
-      display: block;
-      position: relative;
-      top: $small-icon-width;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-repeat: no-repeat;
+      background-position: center center;
+      transform-origin: center;
+    }
+    
+    &:before {
+      background-image: linear-gradient(to right, $icon-color, $icon-color);
+      background-size: 25% 100%;
+      transform: rotate(60deg);
+    }
+    
+    &:after {
+      background-image: radial-gradient($settings-color 0 35%, $icon-color 35% 70%, transparent 70% 100%), linear-gradient(to right, $icon-color, $icon-color);
+      background-size: 70% 70%, 25% 100%;
+      transform: rotate(120deg);
     }
   }
 

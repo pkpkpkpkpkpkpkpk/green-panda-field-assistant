@@ -5,8 +5,9 @@
 
 //settings
 @import './settings/color';
-@import './settings/transition';
+@import './settings/font';
 @import './settings/size';
+@import './settings/transition';
 
 //tools
 @import './tools/animation';
@@ -21,7 +22,7 @@
 
 //components
 @import './components/main';
-@import './components/menu';
 @import './components/output';
-@import './components/table';
 @import './components/recorder';
+@import './components/settings';
+@import './components/table';

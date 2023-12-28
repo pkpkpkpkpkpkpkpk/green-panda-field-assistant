@@ -95,8 +95,8 @@
   height: 100%;
   width: $cell-height;
 
-  &.is-menu-toggle {
-    background: $menu-color;
+  &.is-settings-toggle {
+    background: $settings-color;
     border-right: $border-width solid $border-color;
   }
   
@@ -125,7 +125,7 @@
   }
 }
 
-.menu-btn.btn {
+.settings-btn.btn {
   width: 100%;
   height: calc(100% / 3);
   font-weight: bold;
@@ -136,7 +136,7 @@
   }
 
   [data-dark-theme] & {
-    background: $menu-color;
+    background: $settings-color;
   }
 
   &.is-active {
@@ -144,10 +144,10 @@
     background: $recording-color;
   }
 
-  &.is-menu-toggle {
+  &.is-settings-toggle {
     width: $cell-height;
     height: 100%;
-    background: $menu-color;
+    background: $settings-color;
 
     &:first-of-type {
       border-right: $border-width solid $border-color;

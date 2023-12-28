@@ -2,7 +2,8 @@ import { env, pipeline } from '@xenova/transformers';
 import { WaveFile } from 'wavefile';
 import { Buffer } from 'buffer';
 
-export default async(wavBlob:Blob):Promise<string> => {
+onmessage = async e => {
+  const wavBlob:Blob = e.data;
   const arrayBuffer = await wavBlob.arrayBuffer();
   const buffer = Buffer.from(arrayBuffer);
   const wav = new WaveFile(buffer);
@@ -28,5 +29,5 @@ export default async(wavBlob:Blob):Promise<string> => {
   const result = await transcriber(audioData, { language: 'english' });
 
   console.log('result:', result.text);
-  return result.text;
+  postMessage(result.text);
 }

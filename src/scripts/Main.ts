@@ -1,9 +1,8 @@
-import generateDomElements from './elements/GenerateDomElements';
+import mainElement from './elements/MainElement';
 import * as constants from './tools/Constants';
 import * as helpers from './tools/Helpers';
 import * as events from './components/Events';
 import * as recorder from './components/WavEncoderRecorder';
-import transcriber from './components/Transcriber';
 import formatTextToTable from './components/FormatTextToTable';
 
 let headerCells:HTMLTableCellElement[] = [];
@@ -12,6 +11,7 @@ let promptsIndex = 0;
 let promptsRemaining:number;
 let time:number;
 let startTime:number;
+let transcribingQueueCount = 0;
 
 const onDOMContentLoaded = () => {
   helpers.init();
@@ -19,7 +19,8 @@ const onDOMContentLoaded = () => {
   recorder.init();
 }
 
-const onRecordingStarted = async() => {
+const onRecordingStart = async() => {
+  helpers.setState('recording');
   events.disableDownloadBtn();
 
   if(helpers.isMode(constants.MODE_FREESTYLE)) {
@@ -52,31 +53,47 @@ const onRecordingStarted = async() => {
   helpers.speak(thisPrompt, () => helpers.playSound('start', () => recorder.start()));
 }
 
-const onRecordingStopped = async() => {
+const onRecordingStop = async() => {
   if(!helpers.isMode(constants.MODE_FREESTYLE) && promptsRemaining > 0) {
-    recorder.stop();
-    recorder.insertMarker();
-    events.toggleRecordingState();
+    recorder.stop(); //pause recorder
+    recorder.insertMarker(); //insert marker audio
+    onRecordingStart(); //restart recorder
     return;
   }
 
-  recorder.stop();
+  recorder.stop(); //end recorder
   if(headerCells.length) headerCells.forEach(header => header.classList.remove('is-focused'));
-  helpers.setState('transcribing');
   helpers.playSound('end');
-  helpers.toggleLoader();
   helpers.scrollTo('bottom', 'left', document.querySelector('[data-output-main]'));
   const wavBlob = recorder.getWavBlob();
-  const transcribedText = await transcriber(wavBlob);
-  formatTextToTable(transcribedText, prompts, time, startTime);
-  helpers.playSound('success');
-  helpers.toggleLoader();
-  events.enableDownloadBtn();
-  promptsIndex = 0;
-  helpers.removeState('transcribing');
+  helpers.removeState('recording');
+  onTranscriptionStart(wavBlob, time);
 }
 
-document.body.appendChild(generateDomElements());
+const onTranscriptionStart = (wavBlob:Blob, thisTime:number) => {
+  promptsIndex = 0; //reset variables
+  transcribingQueueCount++;
+  helpers.setState('transcribing');
+
+  if(!window.Worker) return;
+  const transcriberWorker = new Worker(new URL('./workers/Transcriber.ts', import.meta.url));
+  transcriberWorker.postMessage(wavBlob);
+  transcriberWorker.onmessage = e => {
+    const transcribedText:string = e.data;
+    transcriberWorker.terminate();
+    onTranscriptionComplete(transcribedText, thisTime);
+  }
+}
+
+const onTranscriptionComplete = (transcribedText:string, thisTime:number) => {
+  formatTextToTable(transcribedText, prompts, thisTime, startTime);
+  helpers.playSound('success');
+  transcribingQueueCount--;
+  if(transcribingQueueCount === 0) helpers.removeState('transcribing');
+  events.enableDownloadBtn();
+}
+
+document.body.appendChild(mainElement());
 document.addEventListener('DOMContentLoaded', () => onDOMContentLoaded());
-document.addEventListener(constants.EVENT_ON_RECORDING_STARTED, () => onRecordingStarted());
-document.addEventListener(constants.EVENT_ON_RECORDING_STOPPED, () => onRecordingStopped());
+document.addEventListener(constants.EVENT_ON_RECORDING_STARTED, () => onRecordingStart());
+document.addEventListener(constants.EVENT_ON_RECORDING_STOPPED, () => onRecordingStop());

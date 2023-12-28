@@ -1,10 +1,10 @@
 export default () => {
-  const element = document.createElement('div');
-  element.classList.add('main');
+  const main = document.createElement('div');
+  main.classList.add('main');
 
-  element.innerHTML = `
+  main.innerHTML = `
     <div class="recorder">
-      <button data-menu-toggle class="is-menu-toggle supplementary-btn btn"><span class="icon is-menu"></span></button>
+      <button data-settings-toggle class="is-settings-toggle supplementary-btn btn"><span class="icon is-gear"></span></button>
 
       <button data-toggle-recording class="toggle-recording btn">
         <span class="icon"></span>
@@ -58,18 +58,18 @@ export default () => {
       </div>
     </div>
 
-    <div class="menu">
-      <button data-menu-toggle class="is-menu-toggle menu-btn btn"><span class="icon is-cross"></span></button>
+    <div class="settings">
+      <button data-settings-toggle class="is-settings-toggle settings-btn btn"><span class="icon is-cross"></span></button>
     
-      <div class="menu-main">
-        <button data-mode-changer data-mode="default" class="is-default-mode menu-btn btn">DEFAULT MODE</button>
-        <button data-mode-changer data-mode="specific" class="is-specific-mode menu-btn btn">SPECIFIC MODE</button>
-        <button data-mode-changer data-mode="freestyle" class="is-freestyle-mode menu-btn btn">FREESTYLE MODE</button>
+      <div class="settings-main">
+        <button data-mode-changer data-mode="default" class="is-default-mode settings-btn btn">DEFAULT MODE</button>
+        <button data-mode-changer data-mode="specific" class="is-specific-mode settings-btn btn">SPECIFIC MODE</button>
+        <button data-mode-changer data-mode="freestyle" class="is-freestyle-mode settings-btn btn">FREESTYLE MODE</button>
       </div>
       
-      <button data-menu-toggle class="is-menu-toggle menu-btn btn"><span class="icon is-cross"></span></button>
+      <button data-settings-toggle class="is-settings-toggle settings-btn btn"><span class="icon is-cross"></span></button>
     </div>
   `;
 
-  return element;
+  return main;
 }

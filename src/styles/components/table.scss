@@ -8,7 +8,7 @@
   cursor: text;
 
   [data-mode="freestyle"][data-dark-theme] & {
-    border-top: $border-width solid $menu-color;
+    border-top: $border-width solid $settings-color;
   }
   
   thead,
