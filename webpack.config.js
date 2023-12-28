@@ -11,7 +11,10 @@ module.exports = {
     hot: true,
   },
   plugins: [
-    new HtmlWebpackPlugin({ title: 'Green Panda Field Assistant' }),
+    new HtmlWebpackPlugin({ 
+      title: 'Green Panda Field Assistant',
+      favicon: './src/assets/favicon.ico'
+    }),
     new CopyWebpackPlugin({
       patterns: [
         { from: 'src/assets/sounds', to: 'sounds' },
