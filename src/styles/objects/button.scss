@@ -40,11 +40,6 @@
     background: $recording-color;
   }
 
-  [data-is-transcribing] & {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-
   & > .icon {
     width: $icon-size;
     height: $icon-size;

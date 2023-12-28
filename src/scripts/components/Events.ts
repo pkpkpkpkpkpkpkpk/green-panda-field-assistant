@@ -157,7 +157,7 @@ const downloadCSV = (e:MouseEvent) => {
   const downloadEl = document.createElement('a');
   downloadEl.href = window.URL.createObjectURL(csvBlob);
   const date = new Date;
-  downloadEl.download = `output_${date.getDate()}-${date.getMonth()}-${date.getFullYear()}.csv`;
+  downloadEl.download = `field-assistant-output_${date.getDate()}-${date.getMonth()}-${date.getFullYear()}.csv`;
   downloadEl.click();
 }
 
