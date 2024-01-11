@@ -6,7 +6,7 @@ let outputTable:HTMLTableElement;
 
 export const addColumn = (e:MouseEvent|KeyboardEvent) => {
   e.preventDefault();
-  outputTable = document.querySelector('[data-output-table]');
+  outputTable = document.querySelector(constants.SELECTOR_OUTPUT_TABLE);
   const rows = outputTable.querySelectorAll('tr');
   const columnCount = rows.length && rows[0].querySelectorAll('th, td').length;
   
@@ -14,7 +14,7 @@ export const addColumn = (e:MouseEvent|KeyboardEvent) => {
     if(!helpers.isMode(constants.MODE_FREESTYLE) && index === 0) {
       const newHeaderCell = document.createElement('th');
       newHeaderCell.setAttribute('contenteditable', '');
-      newHeaderCell.setAttribute('data-index', `${helpers.getAlphabetDepthFromIndex(columnCount)}0`);
+      newHeaderCell.setAttribute(constants.ATTR_INDEX, `${helpers.getAlphabetDepthFromIndex(columnCount)}0`);
       row.appendChild(newHeaderCell);
       newHeaderCell.focus();
       return;
@@ -23,7 +23,7 @@ export const addColumn = (e:MouseEvent|KeyboardEvent) => {
     const newCell = document.createElement('td');
     newCell.setAttribute('contenteditable', '');
     const cellIndex = `${helpers.getAlphabetDepthFromIndex(columnCount)}${index}`;
-    newCell.setAttribute('data-index', `${helpers.getAlphabetDepthFromIndex(columnCount)}${cellIndex}`);
+    newCell.setAttribute(constants.ATTR_INDEX, `${helpers.getAlphabetDepthFromIndex(columnCount)}${cellIndex}`);
     row.appendChild(newCell);
   });
 
@@ -32,7 +32,7 @@ export const addColumn = (e:MouseEvent|KeyboardEvent) => {
 
 export const downloadCSV = (e:MouseEvent) => {
   e.preventDefault();
-  outputTable = document.querySelector('[data-output-table]');
+  outputTable = document.querySelector(constants.SELECTOR_OUTPUT_TABLE);
   const csv = Array.from(outputTable.querySelectorAll('tr')).map(row => Array.from(row.querySelectorAll('th, td')).map(cell => cell.textContent).join(',')).join('\n');
   const csvBlob = new Blob([csv], { type: 'text/plain' });
   const downloadEl = document.createElement('a');
@@ -43,16 +43,16 @@ export const downloadCSV = (e:MouseEvent) => {
 }
 
 export const focusOnFirstCell = () => {
-  outputMain = document.querySelector('[data-output-main]');
+  outputMain = document.querySelector(constants.SELECTOR_OUTPUT_MAIN);
   outputMain.querySelector('th')?.focus();
 }
 
 export const getHeaderCells = () => {
-  outputTable = document.querySelector('[data-output-table]');
+  outputTable = document.querySelector(constants.SELECTOR_OUTPUT_TABLE);
   if(!outputTable) return;
   
   const columns = Array.from(outputTable.querySelectorAll('th'));
-  if(columns[0].hasAttribute('data-time')) columns.shift();
+  if(columns[0].hasAttribute(constants.ATTR_TIME)) columns.shift();
   return columns;
 }
 
@@ -63,13 +63,13 @@ export const getPrompts = () => {
 }
 
 export const removeDocs = () => {
-  outputTable = document.querySelector('[data-output-table]');
-  outputTable.querySelectorAll('[data-docs]').forEach(docs => docs.remove());
-  outputTable.classList.remove('is-docs');
+  outputTable = document.querySelector(constants.SELECTOR_OUTPUT_TABLE);
+  outputTable.querySelectorAll(constants.SELECTOR_DOCS).forEach(docs => docs.remove());
+  outputTable.classList.remove(constants.CLASS_DOCS);
 }
 
 export const formatTextToTable = (text:string, prompts?:string[], time?:number, startTime?:number) => {
-  outputTable = document.querySelector('[data-output-table]');
+  outputTable = document.querySelector(constants.SELECTOR_OUTPUT_TABLE);
   const rowCount = outputTable.querySelectorAll('tr').length;
   
   //for testing
@@ -148,7 +148,7 @@ export const formatTextToTable = (text:string, prompts?:string[], time?:number, 
     if(time === startTime) {
       const headerRowEl = outputTable.querySelector('tr');
       const headerTimeCell = document.createElement('th');
-      headerTimeCell.setAttribute('data-time', '');
+      headerTimeCell.setAttribute(constants.ATTR_TIME, '');
       headerTimeCell.innerHTML = 'time (s)';
       headerRowEl.insertBefore(headerTimeCell, headerRowEl.firstChild);
     }
@@ -171,7 +171,7 @@ export const formatTextToTable = (text:string, prompts?:string[], time?:number, 
       let cellIndex = `${helpers.getAlphabetDepthFromIndex(cIndex)}${rowCount}`;
       if(helpers.isMode(constants.MODE_FREESTYLE)) cellIndex = `${helpers.getAlphabetDepthFromIndex(cIndex)}${rIndex + 1}`;
       cellEl.setAttribute('contenteditable', '');
-      cellEl.setAttribute('data-index', cellIndex);
+      cellEl.setAttribute(constants.ATTR_INDEX, cellIndex);
       cellEl.innerHTML = cell;
       rowEl.appendChild(cellEl);
     });

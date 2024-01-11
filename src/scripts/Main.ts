@@ -37,20 +37,19 @@ const onRecordingStart = async() => {
   }
 
   if(helpers.isMode(constants.MODE_SPECIFIC)) {
-    headerCells.forEach(header => header.classList.add('is-focused'));
-    document.body.classList.add('is-last-prompt');
+    headerCells.forEach(header => header.classList.add(constants.CLASS_FOCUSED));
+    document.body.classList.add(constants.CLASS_LAST_PROMPT);
     helpers.playAudio('start', () => recorder.start());
     return;
   }
 
-  headerCells.forEach(header => header.classList.remove('is-focused'));
-  headerCells[promptsIndex].classList.add('is-focused');
-  helpers.scrollTo('none', 'left', document.querySelector('[data-output-main]'), headerCells[promptsIndex]);
+  headerCells.forEach(header => header.classList.remove(constants.CLASS_FOCUSED));
+  headerCells[promptsIndex].classList.add(constants.CLASS_FOCUSED);
+  helpers.scrollTo('none', 'left', document.querySelector(constants.SELECTOR_OUTPUT_MAIN), headerCells[promptsIndex]);
   const thisPrompt = prompts[promptsIndex];
   promptsIndex++;
   promptsRemaining = prompts.length - promptsIndex;
-  document.body.classList.remove('is-last-prompt');
-  if(promptsRemaining === 0) document.body.classList.add('is-last-prompt');
+  if(promptsRemaining === 0) document.body.classList.add(constants.CLASS_LAST_PROMPT);
   helpers.speak(thisPrompt, () => helpers.playAudio('start', () => recorder.start()));
 }
 
@@ -63,16 +62,17 @@ const onRecordingStop = async() => {
   }
 
   recorder.stop(); //end recorder
-  if(headerCells.length) headerCells.forEach(header => header.classList.remove('is-focused'));
+  if(headerCells.length) headerCells.forEach(header => header.classList.remove(constants.CLASS_FOCUSED));
   helpers.playAudio('end');
-  helpers.scrollTo('bottom', 'left', document.querySelector('[data-output-main]'));
+  helpers.scrollTo('bottom', 'left', document.querySelector(constants.SELECTOR_OUTPUT_MAIN));
   const wavBlob = recorder.getWavBlob();
   helpers.removeState('recording');
   onTranscriptionStart(wavBlob, time);
 }
 
 const onTranscriptionStart = (wavBlob:Blob, thisTime:number) => {
-  promptsIndex = 0; //reset variables
+  promptsIndex = 0; //reset
+  document.body.classList.remove(constants.CLASS_LAST_PROMPT); //reset
   transcribingQueueCount++;
   helpers.setState('transcribing');
 
@@ -91,6 +91,7 @@ const onTranscriptionComplete = (transcribedText:string, thisTime:number) => {
   helpers.playAudio('success');
   transcribingQueueCount--;
   if(transcribingQueueCount === 0) helpers.removeState('transcribing');
+  settings.enableDownload();
 }
 
 document.body.appendChild(mainElement());

@@ -190,7 +190,7 @@ export const toggleRecordingState = (e:MouseEvent|KeyboardEvent) => {
 
   removeDocs();
   
-  helpers.scrollTo('top', 'left', document.querySelector('[data-output-main]'));
+  helpers.scrollTo('top', 'left', document.querySelector(constants.SELECTOR_OUTPUT_MAIN));
 
   if(!helpers.isState('recording')) {
     document.dispatchEvent(new Event(constants.EVENT_ON_RECORDING_STARTED));

@@ -4,10 +4,11 @@ import { focusOnFirstCell } from './Table';
 
 let settingsToggleBtns:NodeListOf<HTMLButtonElement>;
 let modeChangerBtns:NodeListOf<HTMLButtonElement>;
+let downloadBtn:HTMLButtonElement;
 
 export const init = () => {
-  settingsToggleBtns = document.querySelectorAll('[data-settings-toggle]');
-  modeChangerBtns = document.querySelectorAll('[data-mode-changer]');
+  settingsToggleBtns = document.querySelectorAll(constants.SELECTOR_SETTINGS_TOGGLE);
+  modeChangerBtns = document.querySelectorAll(constants.SELECTOR_MODE_CHANGER);
 
   switch (Cookies.get(constants.COOKIE_MODE)) {
     case constants.MODE_SPECIFIC:
@@ -52,4 +53,10 @@ export const darkThemeToggle = (e:MouseEvent) => {
     return;
   }
   Cookies.remove(constants.COOKIE_DARK_THEME);
+}
+
+export const enableDownload = () => {
+  downloadBtn = document.querySelector(constants.SELECTOR_DOWNLOAD);
+  downloadBtn.removeAttribute(constants.ATTR_DISABLED);
+  downloadBtn.classList.remove(constants.CLASS_DISABLED);
 }

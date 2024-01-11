@@ -1,7 +1,8 @@
-import { tabFocusTrap } from "./Helpers";
+import * as constants from './../tools/Constants';
 import { settingsToggle, changeMode, darkThemeToggle } from "./../components/Settings";
 import { toggleRecordingState } from "./../components/WavEncoderRecorder";
 import { addColumn, downloadCSV } from "./../components/Table";
+import { tabFocusTrap } from "./Helpers";
 
 let toggleRecordingBtn:HTMLButtonElement;
 let addColumnBtn:HTMLButtonElement;
@@ -11,12 +12,12 @@ let darkThemeToggleBtn:HTMLButtonElement;
 let downloadBtn:HTMLButtonElement;
 
 export const init = () => {
-  toggleRecordingBtn = document.querySelector('[data-toggle-recording]');
-  addColumnBtn = document.querySelector('[data-add-column]');
-  settingsToggleBtns = document.querySelectorAll('[data-settings-toggle]');
-  modeChangerBtns = document.querySelectorAll('[data-mode-changer]');
-  darkThemeToggleBtn = document.querySelector('[data-dark-theme-toggle]');
-  downloadBtn = document.querySelector('[data-download]');
+  toggleRecordingBtn = document.querySelector(constants.SELECTOR_TOGGLE_RECORDING);
+  addColumnBtn = document.querySelector(constants.SELECTOR_ADD_COLUMN);
+  settingsToggleBtns = document.querySelectorAll(constants.SELECTOR_SETTINGS_TOGGLE);
+  modeChangerBtns = document.querySelectorAll(constants.SELECTOR_MODE_CHANGER);
+  darkThemeToggleBtn = document.querySelector(constants.SELECTOR_DARK_THEME_TOGGLE);
+  downloadBtn = document.querySelector(constants.SELECTOR_DOWNLOAD);
 
   toggleRecordingBtn?.addEventListener('click', e => onToggleRecordingBtnClicked(e));
   addColumnBtn?.addEventListener('click', e => onAddColumnBtnClicked(e));
