@@ -1,23 +1,21 @@
 import * as constants from './../tools/Constants';
 
-let startSound:HTMLAudioElement;
-let endSound:HTMLAudioElement;
-let successSound:HTMLAudioElement;
+let startAudio:HTMLAudioElement;
+let endAudio:HTMLAudioElement;
+let successAudio:HTMLAudioElement;
 
 export const init = () => {
-  startSound = new Audio('sounds/start.wav');
-  endSound = new Audio('sounds/end.wav');
-  successSound = new Audio('sounds/success.wav');
+  startAudio = new Audio('audio/start.wav');
+  endAudio = new Audio('audio/end.wav');
+  successAudio = new Audio('audio/success.wav');
 }
 
-export const playSound = (sound:'start'|'end'|'success', onEnd?:() => void) => {
-  let soundEl:HTMLAudioElement;
-  const soundName = `${sound}Sound`;
-  soundEl = eval(soundName);
-
-  if(onEnd) soundEl.onended = onEnd;
-
-  soundEl.play();
+export const playAudio = (audio:'start'|'end'|'success', onEnd?:() => void) => {
+  let audioEl:HTMLAudioElement;
+  const audioName = `${audio}Audio`;
+  audioEl = eval(audioName);
+  if(onEnd) audioEl.onended = onEnd;
+  audioEl.play();
 }
 
 export const setState = (state:'recording'|'transcribing') => {
@@ -122,4 +120,39 @@ export const scrollTo = (yDirection:'top'|'bottom'|'none', xDirection:'left'|'ri
     case 'none':
       break;
   }
+}
+
+export const tabFocusTrap = (e:KeyboardEvent) => {
+  const tabElements = document.querySelectorAll('[tabindex="0"]:not(.is-hidden), [contenteditable]');
+  if(!tabElements.length) return;
+  
+  if(!Array.from(tabElements).includes(document.activeElement)) {
+    (tabElements[0] as HTMLElement).focus();
+    return;
+  }
+  
+  const isShiftTab = e.shiftKey;
+  
+  for (let i = 0; i < tabElements.length; i++) {
+    if(document.activeElement != tabElements[i]) continue;
+    const tabIndex = i + 1;
+    const shiftTabIndex = i - 1;
+    let nextIndexModulo = helpers.modulo(tabIndex, tabElements.length);
+    if(isShiftTab) nextIndexModulo = helpers.modulo(shiftTabIndex, tabElements.length);
+    const nextFocusEl = tabElements[nextIndexModulo] as HTMLElement;
+    nextFocusEl.focus();
+    
+    selectTextUponFocus(nextFocusEl);
+
+    break;
+  }
+}
+
+const selectTextUponFocus = (element:HTMLElement) => {
+  if(!(element.nodeName === 'TH' || element.nodeName === 'TD') || !window.getSelection) return;
+  let selection = window.getSelection();        
+  let range = document.createRange();
+  range.selectNodeContents(element);
+  selection.removeAllRanges();
+  selection.addRange(range);
 }

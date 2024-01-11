@@ -1,6 +1,5 @@
 export default () => {
-  const main = document.createElement('div');
-  main.classList.add('main');
+  const main = document.createElement('main');
 
   main.innerHTML = `
     <div class="recorder">

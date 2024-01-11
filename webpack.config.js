@@ -17,7 +17,7 @@ module.exports = {
     }),
     new CopyWebpackPlugin({
       patterns: [
-        { from: 'src/assets/sounds', to: 'sounds' },
+        { from: 'src/assets/audio', to: 'audio' },
         { from: 'src/assets/models', to: 'models' },
         { from: 'src/assets/wasm', to: 'wasm' },
       ]

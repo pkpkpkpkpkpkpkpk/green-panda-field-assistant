@@ -1,3 +1,3 @@
 'use strict';
-import './styles/main.scss';
+import './styles/index.scss';
 import './scripts/Main';

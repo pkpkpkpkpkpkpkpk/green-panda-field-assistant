@@ -1,9 +1,10 @@
 import mainElement from './elements/MainElement';
 import * as constants from './tools/Constants';
 import * as helpers from './tools/Helpers';
-import * as events from './components/Events';
+import * as events from './tools/Events';
+import * as settings from './components/Settings';
 import * as recorder from './components/WavEncoderRecorder';
-import formatTextToTable from './components/FormatTextToTable';
+import * as tableMethods from './components/Table';
 
 let headerCells:HTMLTableCellElement[] = [];
 let prompts:string[] = [];
@@ -16,21 +17,21 @@ let transcribingQueueCount = 0;
 const onDOMContentLoaded = () => {
   helpers.init();
   events.init();
+  settings.init();
   recorder.init();
 }
 
 const onRecordingStart = async() => {
   helpers.setState('recording');
-  events.disableDownloadBtn();
 
   if(helpers.isMode(constants.MODE_FREESTYLE)) {
-    helpers.playSound('start', () => recorder.start());
+    helpers.playAudio('start', () => recorder.start());
     return;
   }
   
   if(promptsIndex === 0) {
-    headerCells = events.getHeaderCells();
-    prompts = events.getPrompts();
+    headerCells = tableMethods.getHeaderCells();
+    prompts = tableMethods.getPrompts();
     time = new Date().getTime();
     if(startTime === undefined) startTime = time;
   }
@@ -38,7 +39,7 @@ const onRecordingStart = async() => {
   if(helpers.isMode(constants.MODE_SPECIFIC)) {
     headerCells.forEach(header => header.classList.add('is-focused'));
     document.body.classList.add('is-last-prompt');
-    helpers.playSound('start', () => recorder.start());
+    helpers.playAudio('start', () => recorder.start());
     return;
   }
 
@@ -50,7 +51,7 @@ const onRecordingStart = async() => {
   promptsRemaining = prompts.length - promptsIndex;
   document.body.classList.remove('is-last-prompt');
   if(promptsRemaining === 0) document.body.classList.add('is-last-prompt');
-  helpers.speak(thisPrompt, () => helpers.playSound('start', () => recorder.start()));
+  helpers.speak(thisPrompt, () => helpers.playAudio('start', () => recorder.start()));
 }
 
 const onRecordingStop = async() => {
@@ -63,7 +64,7 @@ const onRecordingStop = async() => {
 
   recorder.stop(); //end recorder
   if(headerCells.length) headerCells.forEach(header => header.classList.remove('is-focused'));
-  helpers.playSound('end');
+  helpers.playAudio('end');
   helpers.scrollTo('bottom', 'left', document.querySelector('[data-output-main]'));
   const wavBlob = recorder.getWavBlob();
   helpers.removeState('recording');
@@ -86,11 +87,10 @@ const onTranscriptionStart = (wavBlob:Blob, thisTime:number) => {
 }
 
 const onTranscriptionComplete = (transcribedText:string, thisTime:number) => {
-  formatTextToTable(transcribedText, prompts, thisTime, startTime);
-  helpers.playSound('success');
+  tableMethods.formatTextToTable(transcribedText, prompts, thisTime, startTime);
+  helpers.playAudio('success');
   transcribingQueueCount--;
   if(transcribingQueueCount === 0) helpers.removeState('transcribing');
-  events.enableDownloadBtn();
 }
 
 document.body.appendChild(mainElement());

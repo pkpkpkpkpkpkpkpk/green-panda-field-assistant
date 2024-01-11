@@ -1,4 +1,7 @@
 import * as recordingMarker from './../json/RecordingMarker.json';
+import * as constants from './../tools/Constants';
+import * as helpers from './../tools/Helpers';
+import { removeDocs } from './Table';
 
 const config = {
   numChannels: 1,
@@ -175,4 +178,24 @@ const clearBuffers = () => {
   recLength = 0;
   recBuffers = [];
   initBuffers();
+}
+
+export const toggleRecordingState = (e:MouseEvent|KeyboardEvent) => {
+  e.preventDefault();
+
+  //remove focus state and text selection
+  try { (document.activeElement as HTMLElement).blur(); } 
+  catch (error) { console.log('active element cannot be blurred') }
+  window.getSelection()?.removeAllRanges();
+
+  removeDocs();
+  
+  helpers.scrollTo('top', 'left', document.querySelector('[data-output-main]'));
+
+  if(!helpers.isState('recording')) {
+    document.dispatchEvent(new Event(constants.EVENT_ON_RECORDING_STARTED));
+    return;
+  }
+
+  document.dispatchEvent(new Event(constants.EVENT_ON_RECORDING_STOPPED));
 }

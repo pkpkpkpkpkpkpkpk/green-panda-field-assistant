@@ -1,8 +1,75 @@
 import * as constants from './../tools/Constants';
 import * as helpers from './../tools/Helpers';
 
-export default (text:string, prompts?:string[], time?:number, startTime?:number) => {
-  const outputTable:HTMLTableElement = document.querySelector('[data-output-table]');
+let outputMain:HTMLDivElement;
+let outputTable:HTMLTableElement;
+
+export const addColumn = (e:MouseEvent|KeyboardEvent) => {
+  e.preventDefault();
+  outputTable = document.querySelector('[data-output-table]');
+  const rows = outputTable.querySelectorAll('tr');
+  const columnCount = rows.length && rows[0].querySelectorAll('th, td').length;
+  
+  rows.forEach((row, index) => {
+    if(!helpers.isMode(constants.MODE_FREESTYLE) && index === 0) {
+      const newHeaderCell = document.createElement('th');
+      newHeaderCell.setAttribute('contenteditable', '');
+      newHeaderCell.setAttribute('data-index', `${helpers.getAlphabetDepthFromIndex(columnCount)}0`);
+      row.appendChild(newHeaderCell);
+      newHeaderCell.focus();
+      return;
+    }
+    
+    const newCell = document.createElement('td');
+    newCell.setAttribute('contenteditable', '');
+    const cellIndex = `${helpers.getAlphabetDepthFromIndex(columnCount)}${index}`;
+    newCell.setAttribute('data-index', `${helpers.getAlphabetDepthFromIndex(columnCount)}${cellIndex}`);
+    row.appendChild(newCell);
+  });
+
+  removeDocs();
+}
+
+export const downloadCSV = (e:MouseEvent) => {
+  e.preventDefault();
+  outputTable = document.querySelector('[data-output-table]');
+  const csv = Array.from(outputTable.querySelectorAll('tr')).map(row => Array.from(row.querySelectorAll('th, td')).map(cell => cell.textContent).join(',')).join('\n');
+  const csvBlob = new Blob([csv], { type: 'text/plain' });
+  const downloadEl = document.createElement('a');
+  downloadEl.href = window.URL.createObjectURL(csvBlob);
+  const date = new Date;
+  downloadEl.download = `field-assistant-output_${date.getDate()}-${date.getMonth()}-${date.getFullYear()}.csv`;
+  downloadEl.click();
+}
+
+export const focusOnFirstCell = () => {
+  outputMain = document.querySelector('[data-output-main]');
+  outputMain.querySelector('th')?.focus();
+}
+
+export const getHeaderCells = () => {
+  outputTable = document.querySelector('[data-output-table]');
+  if(!outputTable) return;
+  
+  const columns = Array.from(outputTable.querySelectorAll('th'));
+  if(columns[0].hasAttribute('data-time')) columns.shift();
+  return columns;
+}
+
+export const getPrompts = () => {
+  const columns = getHeaderCells();
+  const prompts = columns.map(c => c.innerHTML);
+  return prompts;
+}
+
+export const removeDocs = () => {
+  outputTable = document.querySelector('[data-output-table]');
+  outputTable.querySelectorAll('[data-docs]').forEach(docs => docs.remove());
+  outputTable.classList.remove('is-docs');
+}
+
+export const formatTextToTable = (text:string, prompts?:string[], time?:number, startTime?:number) => {
+  outputTable = document.querySelector('[data-output-table]');
   const rowCount = outputTable.querySelectorAll('tr').length;
   
   //for testing
