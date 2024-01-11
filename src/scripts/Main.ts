@@ -4,7 +4,7 @@ import * as helpers from './tools/Helpers';
 import * as events from './tools/Events';
 import * as settings from './components/Settings';
 import * as recorder from './components/WavEncoderRecorder';
-import * as tableMethods from './components/Table';
+import * as table from './components/Table';
 
 let headerCells:HTMLTableCellElement[] = [];
 let prompts:string[] = [];
@@ -30,8 +30,8 @@ const onRecordingStart = async() => {
   }
   
   if(promptsIndex === 0) {
-    headerCells = tableMethods.getHeaderCells();
-    prompts = tableMethods.getPrompts();
+    headerCells = table.getHeaderCells();
+    prompts = table.getPrompts();
     time = new Date().getTime();
     if(startTime === undefined) startTime = time;
   }
@@ -87,7 +87,7 @@ const onTranscriptionStart = (wavBlob:Blob, thisTime:number) => {
 }
 
 const onTranscriptionComplete = (transcribedText:string, thisTime:number) => {
-  tableMethods.formatTextToTable(transcribedText, prompts, thisTime, startTime);
+  table.formatTextToTable(transcribedText, prompts, thisTime, startTime);
   helpers.playAudio('success');
   transcribingQueueCount--;
   if(transcribingQueueCount === 0) helpers.removeState('transcribing');

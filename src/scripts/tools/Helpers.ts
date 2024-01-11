@@ -137,8 +137,8 @@ export const tabFocusTrap = (e:KeyboardEvent) => {
     if(document.activeElement != tabElements[i]) continue;
     const tabIndex = i + 1;
     const shiftTabIndex = i - 1;
-    let nextIndexModulo = helpers.modulo(tabIndex, tabElements.length);
-    if(isShiftTab) nextIndexModulo = helpers.modulo(shiftTabIndex, tabElements.length);
+    let nextIndexModulo = modulo(tabIndex, tabElements.length);
+    if(isShiftTab) nextIndexModulo = modulo(shiftTabIndex, tabElements.length);
     const nextFocusEl = tabElements[nextIndexModulo] as HTMLElement;
     nextFocusEl.focus();
     
